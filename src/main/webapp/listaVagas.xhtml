@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      template="/template/template.xhtml"
+>
+    
+    <ui:define name="titulo" >
+        Selecionando uma vaga
+    </ui:define>
+    
+    <ui:define name="conteudo">
+        <h3>Para se cadastrar para ma DO clique no botão ao lado do local onde você deseja trabalhar</h3>
+        
+        <br/><br/>
+        <h:form>
+            <p:dataTable var="obj" value="#{marcacao.vagas}"         rows="30" paginator="true"
+        paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+        rowsPerPageTemplate="15,25,50"
+        >
+    <p:column headerText="Id">
+        <h:outputText value="#{obj.id}" />
+    </p:column>
+ 
+    <p:column headerText="Escola" sortBy="#{obj.local.nome}">
+        <h:outputText value="#{obj.local.nome}" />
+    </p:column>
+ 
+    <p:column headerText="Cidade" sortBy="#{obj.local.cidade}" >
+        <h:outputText value="#{obj.local.cidade}" />
+    </p:column>
+ 
+    <p:column headerText="Comando" sortBy="#{obj.local.comando}">
+        <h:outputText value="#{obj.local.comando}" />
+    </p:column>
+                
+    <p:column headerText="Selecionar">
+        <p:commandButton action="#{marcacao.escolher(obj)}" ajax="false" value="Marcar"/>
+    </p:column>
+</p:dataTable>
+            
+            
+        </h:form>
+    </ui:define>
+</ui:composition>
+
