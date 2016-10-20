@@ -3,10 +3,12 @@
 package br.gov.rn.pm.enem.model;
 
 import br.gov.rn.pm.util.PersistDB;
+import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Policial implements PersistDB {
@@ -23,8 +25,12 @@ public class Policial implements PersistDB {
     private String agencia;
     private String conta;
     private String celular;    
-    @OneToOne(mappedBy = "policial")
-    private Vaga vaga;
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Vaga> vagas;
+    
+    public Boolean verificarSenha(String senha){        
+        return this.senha.equals(senha);        
+    }
 
     public int getId() {
         return id;
@@ -106,19 +112,19 @@ public class Policial implements PersistDB {
         this.celular = celular;
     }
 
-    public Vaga getVaga() {
-        return vaga;
+    public List<Vaga> getVagas() {
+        return vagas;
     }
 
-    public void setVaga(Vaga vaga) {
-        this.vaga = vaga;
+    public void setVagas(List<Vaga> vagas) {
+        this.vagas = vagas;
     }
 
     @Override
     public String toString() {
-        return "Policial{" + "id=" + id + ", nome=" + nome + ", email=" + email + ", cpf=" + cpf + ", senha=" + senha + ", matricula=" + matricula + ", banco=" + banco + ", agencia=" + agencia + ", conta=" + conta + ", celular=" + celular + ", vaga=" + vaga + '}';
+        return "Policial{" + "id=" + id + ", nome=" + nome + ", email=" + email + ", cpf=" + cpf + ", senha=" + senha + ", matricula=" + matricula + ", banco=" + banco + ", agencia=" + agencia + ", conta=" + conta + ", celular=" + celular + ", vagas=" + vagas + '}';
     }
-
+ 
     
 
 }

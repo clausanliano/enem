@@ -5,6 +5,7 @@ import br.gov.rn.pm.enem.dao.VagaDAO;
 import br.gov.rn.pm.enem.model.Policial;
 import br.gov.rn.pm.enem.model.Vaga;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -18,53 +19,106 @@ public class  MarcacaoController implements Serializable{
     private List<Vaga> vagas;
     private Policial policial = new Policial();
     private Vaga vaga;
-    private String teste;
+    private List<Vaga> vagasConflitantes = new ArrayList();
+    private String teste;    
+    private List<Vaga> marcadas = new ArrayList();
     
     public String confirmar(){
-        
-        PolicialDAO pmdao = new PolicialDAO();
-        pmdao.update(policial);
-        
         VagaDAO vagadao = new VagaDAO();
-        vaga = vagadao.findByPrimaryKey(vaga.getId());
-        if (vaga.getPolicial() == null){
-            vaga.setPolicial(policial);
-            vagadao.update(vaga);
-            policial = new Policial();
-            return "/comprovante?faces-redirect=true";
-        }else{            
-            return "/cancelar?faces-redirect=true";
+        List<Vaga> lista = vagadao.listarVagasPorPolicialId(policial.getId()); 
+        vagasConflitantes.clear();
+        for (Vaga vagaTmp : lista) {
+            //verifica se horário de início entra em choque com outras vagas já cadastradas
+            if (
+                    (   
+                        vaga.getInicio().after(vagaTmp.getInicio()) 
+                        && 
+                        vaga.getInicio().before(vagaTmp.getTermino())
+                    )
+                    || vaga.getInicio().equals(vagaTmp.getInicio())
+                    || vaga.getInicio().equals(vagaTmp.getTermino())
+                )
+                
+            {
+                    vagasConflitantes.add(vaga);
+                    vagasConflitantes.add(vagaTmp);
+                    return "/conflito?faces-redirect=true";
+                }
+            
+            //verifica se horário de início entra em choque com outras vagas já cadastradas
+            if (
+                    (   
+                        vaga.getTermino().after(vagaTmp.getInicio()) 
+                        && 
+                        vaga.getTermino().before(vagaTmp.getTermino())
+                    )
+                    || vaga.getTermino().equals(vagaTmp.getInicio())
+                    || vaga.getTermino().equals(vagaTmp.getTermino())
+                )
+                
+            {   vagasConflitantes.add(vaga);
+                    vagasConflitantes.add(vagaTmp);
+                    return "/conflito?faces-redirect=true";
+            }   
         }
+        
+        
+        vaga.setPolicial(policial);
+        vagadao.update(vaga);
+        
+        return "/comprovante?faces-redirect=true";
+        
     }
     
     public String logar(){
-        String retorno =  "/cancelar?faces-redirect=true";
         PolicialDAO pmdao = new PolicialDAO();
         List<Policial> listaPolicial = pmdao.findAllLike("matricula", login);
         if (listaPolicial.size() == 1){
             policial = listaPolicial.get(0);
-                        
-            if (policial.getSenha().equals(senha)){
+            if (policial.verificarSenha(senha)){
                 VagaDAO daovaga = new VagaDAO();
-                List<Vaga> listaVaga = daovaga.findAllLike("policial_id", String.valueOf(policial.getId()));
-                if (listaVaga.size() == 1){
-                    vaga = listaVaga.get(0);
-                    policial = new Policial();
-                    retorno = "/comprovante?faces-redirect=true";
-                }else{
-                    vagas = daovaga.listarVagasSemPolicial();
-                    retorno = "/listaVagas?faces-redirect=true";
-                }          
+                marcadas = daovaga.findAllLike("policial_id",String.valueOf(policial.getId()));
+                vagas = daovaga.listarVagasSemPolicial();
+                return "/listaVagas?faces-redirect=true";        
             }
         }        
-        return retorno;
+        return "/cancelar?faces-redirect=true";
     }
     
     
-    public String escolher(Vaga vaga){
-        
-        this.vaga = vaga;
-        
+    public String escolher(int id){
+        VagaDAO daoVaga = new VagaDAO();        
+        vaga = daoVaga.findByPrimaryKey(id);
+        /*
+        marcadas = daoVaga.listarVagasPorPolicialId(policial.getId()); 
+        vagasConflitantes.clear();
+        for(Vaga vg : marcadas){
+            if (
+                    (vg.getInicio().equals(this.vaga.getInicio()))
+                    ||
+                    (vg.getTermino().equals(this.vaga.getTermino()))
+                    ||
+                    (vg.getInicio().equals(this.vaga.getInicio()))
+                    ||
+                    (vg.getTermino().equals(this.vaga.getTermino()))
+                    ||
+                    ((vg.getInicio().after(this.vaga.getInicio())) && (vg.getInicio().before(this.vaga.getTermino())))
+                    ||
+                    ((vg.getTermino().after(this.vaga.getInicio())) && (vg.getTermino().before(this.vaga.getTermino())))
+                )                    
+                {
+                vagasConflitantes.add(this.vaga);
+                    vagasConflitantes.add(vg);
+                    return "/conflito?faces-redirect=true";
+                }else{
+                    System.out.println("Verificação dos horários");
+                    System.out.println("Nova vaga:" + vaga.toString());
+                    System.out.println("Reservado: " + vg.toString());
+                    
+                }
+        }
+        */
+    
         return "/marcacao?faces-redirect=true";
     }
     
@@ -117,6 +171,22 @@ public class  MarcacaoController implements Serializable{
 
     public void setTeste(String teste) {
         this.teste = teste;
+    }
+
+    public List<Vaga> getVagasConflitantes() {
+        return vagasConflitantes;
+    }
+
+    public void setVagasConflitantes(List<Vaga> vagasConflitantes) {
+        this.vagasConflitantes = vagasConflitantes;
+    }
+
+    public List<Vaga> getMarcadas() {
+        return marcadas;
+    }
+
+    public void setMarcadas(List<Vaga> marcadas) {
+        this.marcadas = marcadas;
     }
     
     

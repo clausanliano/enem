@@ -26,5 +26,12 @@ public class VagaDAO extends GenericDAO<Vaga> {
         return retorno;
     }
 
-    
+    public List<Vaga> listarVagasPorPolicialId(int id) {
+        String tabela = getClassType().getSimpleName();
+        String jpql = "from "+tabela+ " where policial_id = " + String.valueOf(id);
+        EntityManager em = getEm();
+        Query q = em.createQuery(jpql);
+        List<Vaga> retorno = q.getResultList();
+        return retorno;
+    }
 }

@@ -3,10 +3,11 @@
   <persistence-unit name="ConexaoDB" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://10.9.100.192/enem"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/enem"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
-      <property name="javax.persistence.jdbc.password" value="@DTI3232-6397"/>
+      <property name="javax.persistence.jdbc.password" value="ai6397"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="hibernate.hbm2ddl.auto" value="update"/>
       <property name="hibernate.show_sql" value="true"/>

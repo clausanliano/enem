@@ -13,35 +13,65 @@
     </ui:define>
     
     <ui:define name="conteudo">
-        <h3>Para se cadastrar para ma DO clique no botão ao lado do local onde você deseja trabalhar</h3>
+        <h3>Ja inscrito em:</h3>
+        <p:dataTable var="obj" value="#{marcacao.marcadas}" scrollable="true" emptyMessage="Sem vagas cadastradas">
+                <p:column headerText="Inicio" >
+                    <h:outputText value="#{obj.inicio}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm"></f:convertDateTime>
+                    </h:outputText>  
+                </p:column>
+
+                <p:column headerText="Termino">
+                    <h:outputText value="#{obj.termino}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm"></f:convertDateTime>
+                    </h:outputText>        
+                </p:column>
+
+                <p:column headerText="Escola" >
+                    <h:outputText value="#{obj.local.nome}" />
+                </p:column>
+        </p:dataTable>
+        
+        <h3>Para se cadastrar para ma DO clique no botão MARCAR ao lado do local onde você deseja trabalhar</h3>
         
         <br/><br/>
         <h:form>
             <p:dataTable var="obj" value="#{marcacao.vagas}"         rows="30" paginator="true"
         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-        rowsPerPageTemplate="15,25,50"
+        rowsPerPageTemplate="25,50,100"
         >
     <p:column headerText="Id">
         <h:outputText value="#{obj.id}" />
     </p:column>
  
-    <p:column headerText="Escola" sortBy="#{obj.local.nome}">
+    <p:column headerText="Inicio" sortBy="#{obj.inicio}">
+        <h:outputText value="#{obj.inicio}">
+            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"></f:convertDateTime>
+        </h:outputText>  
+    </p:column>
+ 
+    <p:column headerText="Termino" sortBy="#{obj.termino}">
+        <h:outputText value="#{obj.termino}">
+            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"></f:convertDateTime>
+        </h:outputText>        
+    </p:column>
+ 
+    <p:column headerText="Escola" sortBy="#{obj.local.nome}"  filterBy="#{obj.local.nome}" >
         <h:outputText value="#{obj.local.nome}" />
     </p:column>
  
-    <p:column headerText="Cidade" sortBy="#{obj.local.cidade}" >
+    <p:column headerText="Cidade" sortBy="#{obj.local.cidade}" filterBy="#{obj.local.cidade}" >
         <h:outputText value="#{obj.local.cidade}" />
     </p:column>
  
-    <p:column headerText="Comando" sortBy="#{obj.local.comando}">
+    <p:column headerText="Comando" sortBy="#{obj.local.comando}" filterBy="#{obj.local.comando}">
         <h:outputText value="#{obj.local.comando}" />
     </p:column>
                 
     <p:column headerText="Selecionar">
-        <p:commandButton action="#{marcacao.escolher(obj)}" ajax="false" value="Marcar"/>
+        <p:commandButton action="#{marcacao.escolher(obj.id)}" ajax="false" value="Marcar"/>
     </p:column>
-</p:dataTable>
-            
+</p:dataTable>           
             
         </h:form>
     </ui:define>

@@ -3,12 +3,15 @@ package br.gov.rn.pm.enem.model;
 
 import br.gov.rn.pm.util.PersistDB;
 import java.util.Calendar;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 public class Vaga implements PersistDB {
@@ -16,13 +19,15 @@ public class Vaga implements PersistDB {
     @Id
     @GeneratedValue
     private int id;
-    private Calendar inicio;
-    private Calendar termino;
+    @Temporal (TemporalType.TIMESTAMP)
+    private Date inicio;
+    @Temporal (TemporalType.TIMESTAMP)
+    private Date termino;
     private Boolean confirmado;
     private String observacao;
     @ManyToOne
     private Local local;
-    @OneToOne
+    @ManyToOne
     private Policial policial;
 
     public int getId() {
@@ -33,19 +38,19 @@ public class Vaga implements PersistDB {
         this.id = id;
     }
 
-    public Calendar getInicio() {
+    public Date getInicio() {
         return inicio;
     }
 
-    public void setInicio(Calendar inicio) {
+    public void setInicio(Date inicio) {
         this.inicio = inicio;
     }
 
-    public Calendar getTermino() {
+    public Date getTermino() {
         return termino;
     }
 
-    public void setTermino(Calendar termino) {
+    public void setTermino(Date termino) {
         this.termino = termino;
     }
 
