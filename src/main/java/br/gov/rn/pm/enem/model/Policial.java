@@ -8,9 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table (name = "policial")
 public class Policial implements PersistDB {
 
     @Id
@@ -25,8 +28,12 @@ public class Policial implements PersistDB {
     private String agencia;
     private String conta;
     private String celular;    
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Vaga> vagas;
+    @ManyToOne (fetch = FetchType.LAZY)
+    private Opm opm;
+    @ManyToOne (fetch = FetchType.EAGER)
+    private Hierarquia hierarquia;
     
     public Boolean verificarSenha(String senha){        
         return this.senha.equals(senha);        
@@ -120,11 +127,27 @@ public class Policial implements PersistDB {
         this.vagas = vagas;
     }
 
+    public Opm getOpm() {
+        return opm;
+    }
+
+    public void setOpm(Opm opm) {
+        this.opm = opm;
+    }
+
+    public Hierarquia getHierarquia() {
+        return hierarquia;
+    }
+
+    public void setHierarquia(Hierarquia hierarquia) {
+        this.hierarquia = hierarquia;
+    }
+
     @Override
     public String toString() {
-        return "Policial{" + "id=" + id + ", nome=" + nome + ", email=" + email + ", cpf=" + cpf + ", senha=" + senha + ", matricula=" + matricula + ", banco=" + banco + ", agencia=" + agencia + ", conta=" + conta + ", celular=" + celular + ", vagas=" + vagas + '}';
+        return "Policial{" + "id=" + id + ", nome=" + nome + ", email=" + email + ", cpf=" + cpf + ", senha=" + senha + ", matricula=" + matricula + ", banco=" + banco + ", agencia=" + agencia + ", conta=" + conta + ", celular=" + celular + '}';
     }
- 
+
     
 
 }

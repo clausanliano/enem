@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      template="/template/template.xhtml"
+>
+    
+    <ui:define name="titulo" >
+        SMD
+    </ui:define>
+    
+    <ui:define name="conteudo">
+        <h3>Cadastro de Escala</h3>
+        
+        <br/><br/>
+        <h:form>
+            <p:outputLabel for="titulo" value="Título: " />
+            <p:inputText id="titulo" value="#{escalaMB.escala.titulo}" maxlength="100" />
+            
+            <p:outputLabel for="data" value="Data: " />
+            <p:calendar id="data" value="#{escalaMB.escala.data}" />
+            
+            <p:outputLabel for="opm" value="OPM: " />            
+            <p:selectOneMenu id="opm" value="#{escalaMB.idOpmSelecionada}" style="width:150px">
+                <f:selectItem itemLabel="Selecione uma OPM" itemValue="" noSelectionOption="true" />
+                <f:selectItems value="#{escalaMB.opms}" var="opm" itemValue="#{opm.id}" itemLabel="#{opm.sigla}" />
+            </p:selectOneMenu>
+            
+            <p:outputLabel for="operacao" value="Operação: " />
+            <p:selectOneMenu id="operacao" value="#{escalaMB.idOperacaoSelecionada}" style="width:150px">
+                <f:selectItem itemLabel="Selecione uma Operação" itemValue="" noSelectionOption="true" />
+                <f:selectItems value="#{escalaMB.operacoes}"  var="operacao" itemValue="#{operacao.id}" itemLabel="#{operacao.nome}"/>
+            </p:selectOneMenu>
+            <br></br>
+            <p:commandButton action="#{escalaMB.salvar()}" ajax="false" value="Inserir" />
+            <br></br>
+            
+            <h:outputText value="Policial: " />
+            <p:inputText id="matricula" value="#{escalaMB.policial.matricula}">
+                    <p:ajax event="blur" update="hierarquia_policial nome_policial opm_policial" />
+                </p:inputText>
+            <h:outputText id="hierarquia_policial" value="#{escalaMB.policial.hierarquia.abreviatura}" />
+            <h:outputText id="nome_policial" value="#{escalaMB.policial.nome}" />
+            <h:outputText id="opm_policial" value="#{escalaMB.policial.opm.sigla}" />
+            
+            
+            <p:outputLabel value="Local:" for="local" />
+            <p:autoComplete id="local"  value="#{escalaMB.local}"
+                                completeMethod="#{escalaMB.consultarLocais}"
+                                var="tmp" itemLabel="#{tmp.nome}"                                 />
+ 
+            <p:remoteCommand name="inserir_vaga" update="tabela_vagas" actionListener="#{escalaMB.inserir_vaga()}" />
+                <p:commandButton type="button" onclick="inserir_vaga()" value="Inserir" icon="ui-icon-refresh" />
+    
+            
+            <p:dataTable id="tabela_vagas" var="vaga" value="#{escalaMB.escala.vagas}">
+                <p:column headerText="Id">
+                    <h:outputText value="#{vaga.id}" />
+                </p:column>
+                <p:column headerText="Local">
+                    <h:outputText value="#{vaga.local.nome}" />
+                </p:column>
+                <p:column headerText="Início">
+                    <h:outputText value="#{vaga.inicio}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm"></f:convertDateTime>
+                    </h:outputText>  
+                </p:column>
+                <p:column headerText="Término">
+                    <h:outputText value="#{vaga.termino}">
+                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm"></f:convertDateTime>
+                    </h:outputText>  
+                </p:column>
+                <p:column headerText="Policial">
+                    <h:outputText value="#{vaga.policial.nome}" />
+                </p:column>
+            </p:dataTable>        
+            
+        </h:form>
+        
+        <br/><br/>
+        
+        <p:dataTable var="obj" value="#{escalaMB.escalas}">
+            <p:column headerText="Id">
+                <h:outputText value="#{obj.id}" />
+            </p:column>
+            <p:column headerText="Título">
+                <h:outputText value="#{obj.titulo}" />
+            </p:column>
+            <p:column headerText="Data">
+                <h:outputText value="#{obj.data}">
+                    <f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+                </h:outputText>  
+            </p:column>
+            <p:column headerText="Operação">
+                <h:outputText value="#{obj.operacao.nome}" />
+            </p:column>
+            <p:column headerText="Opm">
+                <h:outputText value="#{obj.opm.sigla}" />
+            </p:column>
+         </p:dataTable>        
+        
+        
+    </ui:define>
+</ui:composition>
+
