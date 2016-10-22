@@ -137,7 +137,7 @@ public class Local implements PersistDB {
 
     @Override
     public String toString() {
-        return "Local{" + "id=" + id + ", nome=" + nome + ", cidade=" + cidade + ", area=" + area + ", bairro=" + bairro + ", endereco=" + endereco + ", comando=" + comando + ", sabatista=" + sabatista + ", latitude=" + latitude + ", longitude=" + longitude + ", telefone=" + telefone + ", email=" + email + '}';
+        return "Local{" + "id=" + id + ", nome=" + nome + ", cidade=" + cidade + ", area=" + area + ", bairro=" + bairro + ", endereco=" + endereco + ", comando=" + comando + ", sabatista=" + sabatista + ", latitude=" + latitude + ", longitude=" + longitude + ", telefone=" + telefone + ", email=" + email + ", vagas=" + vagas + '}';
     }
     
     

@@ -27,6 +27,7 @@ public class EscalaController {
     private List<Escala> escalas;
     private Policial policial = new Policial();
     private Local local;
+    private List<Local> locais;
 
     public EscalaController() {
         OpmDAO odao = new OpmDAO();
@@ -60,11 +61,6 @@ public class EscalaController {
         escala.getVagas().add(vaga);
     }
     
-    public List<Local> consultarLocais(String nomeParaBusca){
-        LocalDAO ldao = new LocalDAO();
-        return ldao.findAllLike("nome", nomeParaBusca);
-    }
-
     public Escala getEscala() {
         return escala;
     }
@@ -133,6 +129,15 @@ public class EscalaController {
 
     public void setLocal(Local local) {
         this.local = local;
+    }
+
+    public List<Local> getLocais() {
+        LocalDAO ldao = new LocalDAO();
+        return ldao.findAll();
+    }
+
+    public void setLocais(List<Local> locais) {
+        this.locais = locais;
     }
 
     

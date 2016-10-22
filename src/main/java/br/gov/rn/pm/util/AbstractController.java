@@ -11,4 +11,5 @@ public class AbstractController<T extends PersistDB> {
         FacesContext.getCurrentInstance().addMessage(null, fm);
     }
 	
+    
 }
