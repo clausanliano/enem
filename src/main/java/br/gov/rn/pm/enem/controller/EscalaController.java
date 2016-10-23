@@ -5,12 +5,14 @@ import br.gov.rn.pm.enem.dao.LocalDAO;
 import br.gov.rn.pm.enem.dao.OperacaoDAO;
 import br.gov.rn.pm.enem.dao.OpmDAO;
 import br.gov.rn.pm.enem.dao.PolicialDAO;
+import br.gov.rn.pm.enem.dao.VagaDAO;
 import br.gov.rn.pm.enem.model.Escala;
 import br.gov.rn.pm.enem.model.Local;
 import br.gov.rn.pm.enem.model.Operacao;
 import br.gov.rn.pm.enem.model.Opm;
 import br.gov.rn.pm.enem.model.Policial;
 import br.gov.rn.pm.enem.model.Vaga;
+import java.util.ArrayList;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -28,6 +30,8 @@ public class EscalaController {
     private Policial policial = new Policial();
     private Local local;
     private List<Local> locais;
+    private List<Vaga> vagas = new ArrayList();
+    private Vaga vaga = new Vaga();
 
     public EscalaController() {
         OpmDAO odao = new OpmDAO();
@@ -38,6 +42,20 @@ public class EscalaController {
         
         EscalaDAO edao = new EscalaDAO();
         escalas = edao.findAll();
+        
+        LocalDAO ldao = new LocalDAO();
+        locais = ldao.findAll();
+    }
+    
+    public List<Local> consultarLocais (String consulta){
+        LocalDAO ldao = new LocalDAO();
+        locais = ldao.findAllLike("nome", consulta);
+        return locais;
+    }
+    
+    public List<Policial> consultarPoliciais (String consulta){
+        PolicialDAO pdao = new PolicialDAO();
+        return pdao.findAllLike("matricula", consulta);
     }
     
     public String salvar(){
@@ -55,10 +73,10 @@ public class EscalaController {
     }
     
     public  void inserir_vaga(){
-        Vaga vaga = new Vaga();
         vaga.setPolicial(policial);
         vaga.setLocal(local);
-        escala.getVagas().add(vaga);
+        vagas.add(vaga);
+        vaga = new Vaga();
     }
     
     public Escala getEscala() {
@@ -132,13 +150,29 @@ public class EscalaController {
     }
 
     public List<Local> getLocais() {
-        LocalDAO ldao = new LocalDAO();
-        return ldao.findAll();
+        return locais;
     }
 
     public void setLocais(List<Local> locais) {
         this.locais = locais;
     }
+
+    public List<Vaga> getVagas() {
+        return vagas;
+    }
+
+    public void setVagas(List<Vaga> vagas) {
+        this.vagas = vagas;
+    }
+
+    public Vaga getVaga() {
+        return vaga;
+    }
+
+    public void setVaga(Vaga vaga) {
+        this.vaga = vaga;
+    }
+
 
     
     

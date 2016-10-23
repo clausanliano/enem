@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      template="/template/template.xhtml"
+>
+    
+    <ui:define name="titulo" >
+        SMD
+    </ui:define>
+    
+    <ui:define name="conteudo">
+        <h3>Cadastro de Escala</h3>
+        
+        <h:form>   
+        <!-- CADASTRO DE ESCALA -->
+        <p:fieldset legend="Dados da Escala" style="margin-bottom:20px">
+            <h:panelGrid columns="10" cellpadding="5">
+                <p:outputLabel for="titulo" value="Título: " />
+                <p:inputText id="titulo" value="#{escalaMB.escala.titulo}" maxlength="100" />
+                
+                <p:outputLabel for="data" value="Data: " />
+                <p:calendar id="data" value="#{escalaMB.escala.data}" />
+                
+                <p:outputLabel for="opm" value="OPM: " />            
+                <p:selectOneMenu id="opm" value="#{escalaMB.idOpmSelecionada}" style="width:150px">
+                    <f:selectItem itemLabel="Selecione uma OPM" itemValue="" noSelectionOption="true" />
+                    <f:selectItems value="#{escalaMB.opms}" var="opm" itemValue="#{opm.id}" itemLabel="#{opm.sigla}" />
+                </p:selectOneMenu>
+                
+                <p:outputLabel for="operacao" value="Operação: " />
+                <p:selectOneMenu id="operacao" value="#{escalaMB.idOperacaoSelecionada}" style="width:150px">
+                    <f:selectItem itemLabel="Selecione uma Operação" itemValue="" noSelectionOption="true" />
+                    <f:selectItems value="#{escalaMB.operacoes}"  var="operacao" itemValue="#{operacao.id}" itemLabel="#{operacao.nome}"/>
+                </p:selectOneMenu>
+            </h:panelGrid>   
+        <!-- CADASTRO DE VAGAS -->
+        <p:fieldset legend="Vagas da Escala" style="margin-bottom:20px">
+            <h:panelGrid columns="10" cellpadding="5">
+                
+                <p:outputLabel for="inicio" value="Início" />
+                <p:calendar id="inicio" value="#{escalaMB.vaga.inicio}" />
+                <p:outputLabel for="termino" value="Término" />
+                <p:calendar id="termino" value="#{escalaMB.vaga.termino}" />
+                                
+                <p:outputLabel for="local" value="Local: " />
+                <p:autoComplete id="local" 
+                                value="#{escalaMB.local}" 
+                                completeMethod="#{escalaMB.consultarLocais}" 
+                                var="local" 
+                                itemLabel="#{local.nome}"
+                                itemValue="#{local}" 
+                                converter="localConv"/>
+                                
+                <p:outputLabel for="policial" value="Policial: " />
+                <p:autoComplete id="policial" 
+                                value="#{escalaMB.policial}" 
+                                completeMethod="#{escalaMB.consultarPoliciais}" 
+                                var="policial" 
+                                itemLabel="#{policial.nome}"
+                                itemValue="#{policial}" 
+                                converter="policialConv"/>
+                
+                <p:remoteCommand name="inserir_vaga" update="tabela_vagas" actionListener="#{escalaMB.inserir_vaga}" />
+                <p:commandButton type="button" onclick="inserir_vaga()" value="Inserir" icon="ui-icon-refresh" />
+            </h:panelGrid>            
+            <!-- TABELA DAS VAGAS -->
+            <h:panelGrid  columns="1" cellpadding="5">      
+                <p:dataTable id="tabela_vagas" var="vaga" value="#{escalaMB.vagas}">                    
+                    <p:column headerText="Início">
+                        <h:outputText value="#{vaga.inicio}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>  
+                    </p:column>
+                    <p:column headerText="Término">
+                        <h:outputText value="#{vaga.termino}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                        </h:outputText>  
+                    </p:column>
+                    <p:column headerText="Local">
+                        <h:outputText value="#{vaga.local.nome}" />
+                    </p:column>
+                    <p:column headerText="Policial">
+                        <h:outputText value="#{vaga.policial.nome}" />
+                    </p:column>
+                 </p:dataTable>  
+            </h:panelGrid>            
+        </p:fieldset>
+            <p:commandButton action="#{escalaMB.salvar()}" ajax="false" value="Inserir" />
+        </p:fieldset>
+                   
+        </h:form>
+    </ui:define>
+</ui:composition>
+

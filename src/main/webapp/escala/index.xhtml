@@ -47,19 +47,18 @@
             <h:outputText id="opm_policial" value="#{escalaMB.policial.opm.sigla}" />
             
             
-            
             <p:outputLabel for="local" value="Local: " />
-            <p:selectOneMenu id="local" value="#{escalaMB.local}" style="width:150px">
-                <f:selectItem itemLabel="Selecione um local" itemValue="" noSelectionOption="true" />
-                <f:selectItems value="#{escalaMB.locais}" />
-            </p:selectOneMenu>
-            
-                       
-            
-            
-            
+            <p:autoComplete id="local" 
+                            value="#{escalaMB.local}" 
+                            completeMethod="#{escalaMB.consultarLocais}" 
+                            var="local" 
+                            itemLabel="#{local.nome}"
+                            itemValue="#{local}" 
+                            converter="localConv"/>
  
-            <p:remoteCommand name="inserir_vaga" update="tabela_vagas" actionListener="#{escalaMB.inserir_vaga()}" />
+
+ 
+            <p:remoteCommand name="inserir_vaga" update="tabela_vagas" actionListener="#{escalaMB.inserir_vaga}" />
                 <p:commandButton type="button" onclick="inserir_vaga()" value="Inserir" icon="ui-icon-refresh" />
     
             
