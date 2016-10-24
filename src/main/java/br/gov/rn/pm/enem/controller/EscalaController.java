@@ -22,14 +22,12 @@ import javax.faces.bean.ViewScoped;
 public class EscalaController {
     
     private Escala escala = new Escala();
-    private int idOpmSelecionada;
-    private int idOperacaoSelecionada;
+    private Opm opm;
+    private Operacao operacao;
     private List<Opm> opms;
     private List<Operacao> operacoes;
-    private List<Escala> escalas;
-    private Policial policial = new Policial();
+    private Policial policial;
     private Local local;
-    private List<Local> locais;
     private List<Vaga> vagas = new ArrayList();
     private Vaga vaga = new Vaga();
 
@@ -40,17 +38,13 @@ public class EscalaController {
         OperacaoDAO opdao = new OperacaoDAO();
         operacoes = opdao.findAll();
         
-        EscalaDAO edao = new EscalaDAO();
-        escalas = edao.findAll();
+        policial = new Policial();
         
-        LocalDAO ldao = new LocalDAO();
-        locais = ldao.findAll();
     }
     
     public List<Local> consultarLocais (String consulta){
         LocalDAO ldao = new LocalDAO();
-        locais = ldao.findAllLike("nome", consulta);
-        return locais;
+        return ldao.findAllLike("nome", consulta);
     }
     
     public List<Policial> consultarPoliciais (String consulta){
@@ -58,17 +52,16 @@ public class EscalaController {
         return pdao.findAllLike("matricula", consulta);
     }
     
-    public String salvar(){
-        OpmDAO odao = new OpmDAO();
-        escala.setOpm(odao.findByPrimaryKey(idOpmSelecionada));
-        
-        OperacaoDAO opdao = new OperacaoDAO();
-        escala.setOperacao(opdao.findByPrimaryKey(idOperacaoSelecionada));
-        
-        EscalaDAO edao = new EscalaDAO();
-        edao.create(escala);
-        escalas.add(escala);
-        escala = new Escala();
+    public String salvar(){        
+       // escala.setOpm(opm);       
+//        System.out.println("opm: " + opm.toString());
+//        escala.setOperacao(operacao);
+//        System.out.println("operacao: " + operacao.toString());
+//        escala.setVagas(vagas);
+//        System.out.println("vagas: " + vagas.toString());
+//        EscalaDAO edao = new EscalaDAO();
+//        edao.create(escala);
+//        escala = new Escala();
         return "escala/index?faces-redirect=true";
     }
     
@@ -103,35 +96,13 @@ public class EscalaController {
         this.operacoes = operacoes;
     }
 
-    public List<Escala> getEscalas() {
-        return escalas;
-    }
-
-    public void setEscalas(List<Escala> escalas) {
-        this.escalas = escalas;
-    }
-
-    public int getIdOpmSelecionada() {
-        return idOpmSelecionada;
-    }
-
-    public void setIdOpmSelecionada(int idOpmSelecionada) {
-        this.idOpmSelecionada = idOpmSelecionada;
-    }
-
-    public int getIdOperacaoSelecionada() {
-        return idOperacaoSelecionada;
-    }
-
-    public void setIdOperacaoSelecionada(int idOperacaoSelecionada) {
-        this.idOperacaoSelecionada = idOperacaoSelecionada;
-    }
-
     public Policial getPolicial() {
         PolicialDAO pdao = new PolicialDAO();
         List<Policial> lista = pdao.findAllLike("matricula", policial.getMatricula());
         if (lista.size() == 1){
-            policial = lista.get(0);
+            policial = lista.get(0);        
+        }else{
+            policial = new Policial();
         }
         return policial;
         
@@ -148,15 +119,7 @@ public class EscalaController {
     public void setLocal(Local local) {
         this.local = local;
     }
-
-    public List<Local> getLocais() {
-        return locais;
-    }
-
-    public void setLocais(List<Local> locais) {
-        this.locais = locais;
-    }
-
+    
     public List<Vaga> getVagas() {
         return vagas;
     }
@@ -173,7 +136,20 @@ public class EscalaController {
         this.vaga = vaga;
     }
 
+    public Opm getOpm() {
+        return opm;
+    }
 
-    
+    public void setOpm(Opm opm) {
+        this.opm = opm;
+    }
+
+    public Operacao getOperacao() {
+        return operacao;
+    }
+
+    public void setOperacao(Operacao operacao) {
+        this.operacao = operacao;
+    }
     
 }

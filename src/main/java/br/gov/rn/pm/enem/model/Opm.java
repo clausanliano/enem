@@ -68,10 +68,6 @@ public class Opm  implements PersistDB {
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return "Opm{" + "id=" + id + ", nome=" + nome + ", sigla=" + sigla + ", endereco=" + endereco + ", telefone=" + telefone + ", email=" + email + '}';
-    }
     
     
     

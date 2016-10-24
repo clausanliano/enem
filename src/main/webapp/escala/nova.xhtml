@@ -26,15 +26,15 @@
                 <p:calendar id="data" value="#{escalaMB.escala.data}" />
                 
                 <p:outputLabel for="opm" value="OPM: " />            
-                <p:selectOneMenu id="opm" value="#{escalaMB.idOpmSelecionada}" style="width:150px">
-                    <f:selectItem itemLabel="Selecione uma OPM" itemValue="" noSelectionOption="true" />
-                    <f:selectItems value="#{escalaMB.opms}" var="opm" itemValue="#{opm.id}" itemLabel="#{opm.sigla}" />
+                <p:selectOneMenu id="opm" value="#{escalaMB.escala.opm}" style="width:150px" converter="opmConv" >
+                    <f:selectItem itemLabel="-- Selecione --" /> 
+                    <f:selectItems value="#{escalaMB.opms}" var="opm" itemLabel="#{opm.sigla}" itemValue="#{opm}"  />
                 </p:selectOneMenu>
                 
                 <p:outputLabel for="operacao" value="Operação: " />
-                <p:selectOneMenu id="operacao" value="#{escalaMB.idOperacaoSelecionada}" style="width:150px">
-                    <f:selectItem itemLabel="Selecione uma Operação" itemValue="" noSelectionOption="true" />
-                    <f:selectItems value="#{escalaMB.operacoes}"  var="operacao" itemValue="#{operacao.id}" itemLabel="#{operacao.nome}"/>
+                <p:selectOneMenu id="operacao" value="#{escalaMB.escala.operacao}" style="width:150px" converter="operacaoConv" >
+                    <f:selectItem itemLabel="-- Selecione --" />
+                    <f:selectItems value="#{escalaMB.operacoes}"  var="operacao" itemLabel="#{operacao.nome}" itemValue="#{operacao}" />
                 </p:selectOneMenu>
             </h:panelGrid>   
         <!-- CADASTRO DE VAGAS -->
@@ -62,7 +62,9 @@
                                 var="policial" 
                                 itemLabel="#{policial.nome}"
                                 itemValue="#{policial}" 
-                                converter="policialConv"/>
+                                converter="policialConv"
+                                 
+                                />
                 
                 <p:remoteCommand name="inserir_vaga" update="tabela_vagas" actionListener="#{escalaMB.inserir_vaga}" />
                 <p:commandButton type="button" onclick="inserir_vaga()" value="Inserir" icon="ui-icon-refresh" />
